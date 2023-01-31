@@ -1,6 +1,6 @@
-file = open("courses.txt", "r")
+file = open("csv/courses.txt", "r")
 Lines = file.readlines()
-file2 = open("data.txt", "w")
+file2 = open("csv/data.txt", "w")
 for line in Lines:
     if line[:4] == "INLS":
         writeLine = "INLS, "+line[5:8]+", "

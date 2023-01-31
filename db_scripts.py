@@ -22,7 +22,7 @@ def setup_courses_table(file):
     ''')
 
     # import courses data
-    with open("data.csv", "r") as file:
+    with open("csv/data.csv", "r") as file:
         reader = csv.reader(file)
         header = next(reader)
         
@@ -56,7 +56,7 @@ def setup_bin_table(file):
     """)
 
     # import Bin data
-    with open("bin.csv", "r") as file:
+    with open("csv/bin.csv", "r") as file:
         reader = csv.reader(file)
         
         for row in reader:
