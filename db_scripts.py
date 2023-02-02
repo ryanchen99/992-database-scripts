@@ -1,7 +1,6 @@
+import sqlite3
+import csv
 def setup_courses_table(file):
-    import sqlite3
-    import csv
-
     # Connect to the database file or create a new one if it doesn't exist
     conn = sqlite3.connect(file)
 
@@ -11,13 +10,13 @@ def setup_courses_table(file):
     # Create a table in the database
     # Subjects, Number, Name, Credits, Bin_ID
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS Courses (
-            Subjects TEXT,
-            Number INTEGER,
-            Name TEXT,
-            Credits REAL,
-            Bin_ID INTEGER,
-            PRIMARY KEY (Subjects, Number)
+        CREATE TABLE IF NOT EXISTS COURSE (
+            subject TEXT,
+            number TEXT,
+            name TEXT,
+            credit REAL,
+            bin_id INTEGER,
+            PRIMARY KEY (subject, number, name)
         )
     ''')
 
@@ -29,17 +28,15 @@ def setup_courses_table(file):
         for row in reader:
             print(row)
             cursor.execute("""
-                INSERT INTO Courses (Subjects, Number, Name, Credits, Bin_ID)
+                INSERT INTO COURSE (subject, number, name, credit, bin_id)
                 VALUES (?, ?, ?, ?, ?)
             """, row)
     # Commit the changes and close the connection
     conn.commit()
     conn.close()
 
-def setup_bin_table(file):
-    import sqlite3
-    import csv
 
+def setup_bin_table(file):
     # Connect to the database file or create a new one if it doesn't exist
     conn = sqlite3.connect(file)
 
@@ -48,10 +45,10 @@ def setup_bin_table(file):
 
     # Create Bin table
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Bin (
-            Bin_ID INTEGER,
-            Bin_Name TEXT,
-            PRIMARY KEY (Bin_ID)
+        CREATE TABLE IF NOT EXISTS BIN (
+            bin_id INTEGER,
+            bin_name TEXT,
+            PRIMARY KEY (bin_id)
         )
     """)
 
@@ -62,9 +59,72 @@ def setup_bin_table(file):
         for row in reader:
             print(row)
             cursor.execute("""
-                INSERT INTO Bin (Bin_ID, Bin_Name)
+                INSERT INTO BIN (bin_id, bin_name)
                 VALUES (?, ?)
             """, row)
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+
+
+def setup_Specializations_table(file):
+    # Connect to the database file or create a new one if it doesn't exist
+    conn = sqlite3.connect(file)
+
+    # Create a cursor object to execute SQL commands
+    cursor = conn.cursor()
+
+    # Create Bin table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS SPECIALIZATION (
+            spec_id INTEGER,
+            spec_name TEXT,
+            PRIMARY KEY (spec_id)
+        )
+    """)
+
+    # import Bin data
+    with open("csv/spec.csv", "r") as file:
+        reader = csv.reader(file)
+        
+        for row in reader:
+            print(row)
+            cursor.execute("""
+                INSERT INTO SPECIALIZATION (spec_id, spec_name)
+                VALUES (?, ?)
+            """, row)
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+
+
+def setup_CourseToSpec_table(file):
+    # Connect to the database file or create a new one if it doesn't exist
+    conn = sqlite3.connect(file)
+
+    # Create a cursor object to execute SQL commands
+    cursor = conn.cursor()
+
+    # Create Bin table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS COURSE_TO_SPEC (
+            subject INTEGER,
+            number TEXT,
+            spec_id INTEGER,
+            PRIMARY KEY (subject, number, spec_id)
+        )
+    """)
+
+    # # import Bin data
+    # with open("csv/spec.csv", "r") as file:
+    #     reader = csv.reader(file)
+        
+    #     for row in reader:
+    #         print(row)
+    #         cursor.execute("""
+    #             INSERT INTO SPECIALIZATION (spec_id, spec_name)
+    #             VALUES (?, ?)
+    #         """, row)
     # Commit the changes and close the connection
     conn.commit()
     conn.close()
@@ -74,3 +134,5 @@ if __name__ == "__main__":
     file = "graduate_tracking_system.db"
     setup_courses_table(file)
     setup_bin_table(file)
+    setup_Specializations_table(file)
+    # setup_CourseToSpec_table(file)
